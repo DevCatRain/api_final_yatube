@@ -1,4 +1,4 @@
-from rest_framework import viewsets, filters, mixins
+from rest_framework import viewsets, filters
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
 
@@ -6,25 +6,7 @@ from posts.models import Post, Group, User, Follow
 from .serializers import (FollowSerializer, PostSerializer, GroupSerializer,
                           CommentSerializer, UserSerializer)
 from .permissions import IsAuthorOrReadOnly
-
-
-class CreateListRetrieveViewSet(mixins.CreateModelMixin,
-                                mixins.RetrieveModelMixin,
-                                mixins.ListModelMixin,
-                                viewsets.GenericViewSet):
-    pass
-
-
-class CreateListViewSet(mixins.CreateModelMixin,
-                        mixins.ListModelMixin,
-                        viewsets.GenericViewSet):
-    pass
-
-
-class UpdateDestroyViewSet(mixins.UpdateModelMixin,
-                           mixins.DestroyModelMixin,
-                           viewsets.GenericViewSet):
-    pass
+from .mixins import CreateListViewSet
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -65,7 +47,7 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsAuthorOrReadOnly,)
 
 
-class CommentViewSet(CreateListRetrieveViewSet, UpdateDestroyViewSet):
+class CommentViewSet(viewsets.ModelViewSet):
 
     """ Предоставляет возможность работать с комментариями:
     создавать, редактировать, удалять.
@@ -101,5 +83,5 @@ class FollowViewSet(CreateListViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
-        queryset = Follow.objects.filter(user=self.request.user)
-        return queryset
+        return Follow.objects.filter(user=self.request.user)
+        # Не поняла, как можно сделать через related_name

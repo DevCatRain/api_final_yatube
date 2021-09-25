@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.relations import SlugRelatedField, StringRelatedField
+from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueTogetherValidator, ValidationError
 
 from posts.models import Comment, Post, Group, Follow, User
@@ -7,7 +7,6 @@ from posts.models import Comment, Post, Group, Follow, User
 
 class PostSerializer(serializers.ModelSerializer):
     author = SlugRelatedField(slug_field='username', read_only=True)
-    image = StringRelatedField(read_only=True)
 
     class Meta:
         model = Post

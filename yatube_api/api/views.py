@@ -83,5 +83,4 @@ class FollowViewSet(CreateListViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
-        return Follow.objects.filter(user=self.request.user)
-        # Не поняла, как можно сделать через related_name
+        return self.request.user.user.all()
